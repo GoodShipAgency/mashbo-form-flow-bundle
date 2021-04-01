@@ -1,0 +1,31 @@
+{
+    "name": "mashbo/form-flow-bundle",
+    "description": "Mashbo FormFlowBundle abstracts away as much cSymfony controller and form code as possible, so you can focus more on business logic",
+    "type": "symfony-bundle",
+    "require": {
+        "php": "^8.0",
+        "symfony/config": "^5.2",
+        "symfony/dependency-injection": "^5.2",
+        "doctrine/orm": "^2.8",
+        "symfony/form": "^5.2",
+        "symfony/event-dispatcher": "^5.2",
+        "twig/twig": "^3.3",
+        "symfony/workflow": "^5.2",
+        "symfony/messenger": "^5.2",
+        "symfony/http-foundation": "^5.2",
+        "symfony/validator": "^5.2",
+        "symfony/routing": "^5.2",
+        "symfony/expression-language": "^5.2"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^5.2",
+        "vimeo/psalm": "^4.7"
+    },
+    "authors": [
+        {
+            "name": "Adam Quaile",
+            "email": "aquaile@mashbo.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}

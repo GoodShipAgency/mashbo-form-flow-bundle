@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Mashbo\FormFlowBundle\RequestHandler" class="Mashbo\FormFlowBundle\RequestHandler">
+            <argument type="service" id="Mashbo\FormFlowBundle\FlowRegistry" />
+            <argument type="service" id="event_dispatcher" />
+        </service>
+        <service id="Mashbo\FormFlowBundle\FlowRegistry" class="Mashbo\FormFlowBundle\FlowRegistry" />
+
+        <service id="Mashbo\FormFlowBundle\EventSubscribers\AddSubjectToContextWhenDeterminedEventSubscriber" class="Mashbo\FormFlowBundle\EventSubscribers\AddSubjectToContextWhenDeterminedEventSubscriber">
+            <argument type="service" id="twig" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="Mashbo\FormFlowBundle\FormEmbedder" class="Mashbo\FormFlowBundle\FormEmbedder">
+            <argument type="service" id="Mashbo\FormFlowBundle\FlowRegistry" />
+            <argument type="service" id="event_dispatcher" />
+        </service>
+
+        <service id="Mashbo\FormFlowBundle\WorkflowUpgradeTwigExtension" class="Mashbo\FormFlowBundle\WorkflowUpgradeTwigExtension">
+            <tag name="twig.extension" />
+            <argument type="service" id="Mashbo\FormFlowBundle\FlowRegistry" />
+        </service>
+
+    </services>
+</container>
