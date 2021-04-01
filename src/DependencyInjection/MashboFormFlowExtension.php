@@ -30,7 +30,7 @@ use Symfony\Component\Workflow\Registry;
 class MashboFormFlowExtension extends Extension
 {
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new XmlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));
         $loader->load('services.xml');
@@ -123,7 +123,7 @@ class MashboFormFlowExtension extends Extension
         $container->setDefinition(ValidationListener::class, $validationListener);
     }
 
-    private function resolveHandlerService(string $flowName, array $config, array $defaults)
+    private function resolveHandlerService(string $flowName, array $config, array $defaults): Definition
     {
         $key = $config['handler'] ?? $defaults['handler'] ?? null;
         if ($key === null) {

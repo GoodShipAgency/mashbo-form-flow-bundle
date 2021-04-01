@@ -25,13 +25,15 @@ class WorkflowEventSubscriber implements EventSubscriberInterface
         $this->flowName = $flowName;
     }
 
-    public function onBeforeHandler(BeforeHandlerEvent $event)
+    public function onBeforeHandler(BeforeHandlerEvent $event): void
     {
         if ($event->getContext()->getName() !== $this->flowName) {
             return;
         }
 
         $subject = $event->getContext()->subject;
+
+        /** @psalm-suppress PossiblyNullArgument $workflow */
         $workflow = $this->registry->get($subject, $this->workflow);
 
         if (!$workflow->can($subject, $this->transition)) {
@@ -40,7 +42,7 @@ class WorkflowEventSubscriber implements EventSubscriberInterface
 
     }
 
-    public function onFlowSucceeded(FlowSucceeded $event)
+    public function onFlowSucceeded(FlowSucceeded $event): void
     {
         if ($event->getContext()->getName() !== $this->flowName) {
             return;
@@ -52,13 +54,15 @@ class WorkflowEventSubscriber implements EventSubscriberInterface
         }
 
         $subject = $event->getContext()->subject;
+
+        /** @psalm-suppress PossiblyNullArgument $workflow */
         $workflow = $this->registry->get($subject, $this->workflow);
 
         $workflow->apply($subject, $this->transition);
         $this->applied = true;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeHandlerEvent::class => 'onBeforeHandler',

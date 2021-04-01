@@ -47,11 +47,6 @@ class Flow implements FlowInterface
         return $this->formFactory->create($this->formType, null, []);
     }
 
-    public function getSubject(): ?object
-    {
-        return null;
-    }
-
     public function getTransition(): ?string
     {
         if ($this->workflow === null || $this->transition === null) {
@@ -68,7 +63,7 @@ class Flow implements FlowInterface
             return null;
         }
 
-        return $this->registry->get($this->getSubject(), $this->workflow);
+        return $this->registry->get(null, $this->workflow);
     }
 
     public function getHandler(): FlowHandler

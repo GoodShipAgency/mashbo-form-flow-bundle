@@ -12,7 +12,6 @@ interface FlowInterface
 {
     public function getMetadata(): array;
     public function getForm(): FormInterface;
-    public function getSubject(): ?object;
     public function getTransition(): ?string;
     public function getWorkflow(): ?Workflow;
     public function getHandler(): FlowHandler;

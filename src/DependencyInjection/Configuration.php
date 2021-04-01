@@ -7,7 +7,11 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    /**
+     * @psalm-suppress PossiblyUndefinedMethod
+     * @psalm-suppress PossiblyNullReference
+     */
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('mashbo_workflow_upgrade');
         $treeBuilder->getRootNode()
@@ -28,8 +32,8 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('template')->defaultNull()->end()
                             ->arrayNode('success_redirect')
                                 ->beforeNormalization()
-                                    ->ifTrue(function($v) { return $v === false; })
-                                    ->then(function($v) { return ['enabled' => false]; })
+                                    ->ifTrue(fn (mixed $v) => $v === false)
+                                    ->then(fn () => ['enabled' => false])
                                 ->end()
                                 ->children()
                                     ->booleanNode('enabled')->defaultValue(true)->end()
@@ -40,7 +44,7 @@ class Configuration implements ConfigurationInterface
                             ->arrayNode('workflow_transition')
                                 ->beforeNormalization()
                                     ->ifString()
-                                    ->then(function($v) { $parts = explode('.', $v); return ['workflow' => $parts[0], 'transition' => $parts[1]]; })
+                                    ->then(function(string $v): array { $parts = explode('.', $v); return ['workflow' => $parts[0], 'transition' => $parts[1]]; })
                                 ->end()
                                 ->children()
                                     ->scalarNode('workflow')->end()

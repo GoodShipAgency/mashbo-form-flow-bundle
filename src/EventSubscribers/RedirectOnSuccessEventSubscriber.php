@@ -12,10 +12,10 @@ class RedirectOnSuccessEventSubscriber implements EventSubscriberInterface
 {
     private UrlGeneratorInterface $urlGenerator;
     private ?string $routeName;
-    private ?array $routeParams;
+    private array $routeParams;
     private string $flowName;
 
-    public function __construct(string $flowName, UrlGeneratorInterface $urlGenerator, ?string $routeName, ?array $routeParams)
+    public function __construct(string $flowName, UrlGeneratorInterface $urlGenerator, ?string $routeName, array $routeParams)
     {
         $this->urlGenerator = $urlGenerator;
         $this->routeName = $routeName;
@@ -23,7 +23,7 @@ class RedirectOnSuccessEventSubscriber implements EventSubscriberInterface
         $this->flowName = $flowName;
     }
 
-    public function onFindResponseEvent(FindResponseEvent $event)
+    public function onFindResponseEvent(FindResponseEvent $event): void
     {
         $context = $event->getContext();
 
@@ -60,7 +60,7 @@ class RedirectOnSuccessEventSubscriber implements EventSubscriberInterface
         );
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             FindResponseEvent::class => 'onFindResponseEvent'
