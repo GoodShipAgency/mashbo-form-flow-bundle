@@ -15,6 +15,7 @@ class AddSubjectToContextWhenDeterminedEventSubscriber implements EventSubscribe
     {
         $this->latestContext = $event->getContext();
     }
+
     public function onSubjectWasDetermined(SubjectWasDetermined $event): void
     {
         if ($this->latestContext === null) {
@@ -22,6 +23,7 @@ class AddSubjectToContextWhenDeterminedEventSubscriber implements EventSubscribe
         }
         $this->latestContext->setSubject($event->getSubject());
     }
+
     public static function getSubscribedEvents(): array
     {
         return [

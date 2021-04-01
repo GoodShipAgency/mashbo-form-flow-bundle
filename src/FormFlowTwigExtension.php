@@ -2,10 +2,8 @@
 
 namespace Mashbo\FormFlowBundle;
 
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Twig\Extension\AbstractExtension;
-use Twig\Extension\ExtensionInterface;
 use Twig\TwigFunction;
 
 class FormFlowTwigExtension extends AbstractExtension

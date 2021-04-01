@@ -4,7 +4,6 @@ namespace Mashbo\FormFlowBundle\EventSubscribers;
 
 use Mashbo\FormFlowBundle\Events\BeforeFormEvent;
 use Mashbo\FormFlowBundle\Events\BeforeHandlerEvent;
-use Mashbo\FormFlowBundle\Events\SubjectWasDetermined;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -73,7 +72,6 @@ class ModifyDataEventSubscriber implements EventSubscriberInterface
             );
         }
     }
-
 
     public static function getSubscribedEvents()
     {

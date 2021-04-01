@@ -12,7 +12,6 @@ use Mashbo\FormFlowBundle\Events\SubjectWasDetermined;
 use Mashbo\FormFlowBundle\Exceptions\FormFailedValidation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Exception\ValidationFailedException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class RequestHandler

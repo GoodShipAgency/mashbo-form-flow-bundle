@@ -5,7 +5,6 @@ namespace Mashbo\FormFlowBundle;
 use Mashbo\FormFlowBundle\Events\BeforeFormEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 
 class FormEmbedder
 {

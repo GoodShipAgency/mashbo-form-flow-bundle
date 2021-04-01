@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('mashbo_workflow_upgrade');
+        $treeBuilder = new TreeBuilder('form_flow');
         $treeBuilder->getRootNode()
             ->children()
                 ->arrayNode('flow_defaults')

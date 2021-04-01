@@ -11,7 +11,6 @@ use Mashbo\FormFlowBundle\EventSubscribers\WorkflowEventSubscriber;
 use Mashbo\FormFlowBundle\Flow;
 use Mashbo\FormFlowBundle\FlowHandlers\DoctrineFlushEntityManagerHandler;
 use Mashbo\FormFlowBundle\FlowHandlers\MessageBusHandler;
-use Mashbo\FormFlowBundle\FlowHandlers\WorkflowWrappedFlowHandler;
 use Mashbo\FormFlowBundle\FlowRegistry;
 use Mashbo\FormFlowBundle\FormEmbedder;
 use Symfony\Component\Config\FileLocator;
@@ -81,7 +80,7 @@ class MashboFormFlowExtension extends Extension
                 $successRedirectSubscriberDefinition->setArgument('$routeParams', $flowConfig['success_redirect']['parameters'] ?? []);
                 $successRedirectSubscriberDefinition->addTag('kernel.event_subscriber');
 
-                $container->setDefinition("mashbo_workflow_upgrade.flows.$flowName.success_redirect_event_subscriber", $successRedirectSubscriberDefinition);
+                $container->setDefinition("form_flow.flows.$flowName.success_redirect_event_subscriber", $successRedirectSubscriberDefinition);
             }
 
             $useWorkflowListener = isset($flowConfig['workflow_transition']) && is_array($flowConfig['workflow_transition']) && count($flowConfig['workflow_transition']) == 2;
@@ -94,17 +93,17 @@ class MashboFormFlowExtension extends Extension
                     $flowConfig['workflow_transition']['transition']
                 ]);
                 $workflowListenerDefinition->addTag('kernel.event_subscriber');
-                $container->setDefinition("mashbo_workflow_upgrade.flows.$flowName.workflow_event_subscriber", $workflowListenerDefinition);
+                $container->setDefinition("form_flow.flows.$flowName.workflow_event_subscriber", $workflowListenerDefinition);
             }
 
             $renderFormListenerDefinition = new Definition(RenderFormResponseEventSubscriber::class);
             $renderFormListenerDefinition->setArgument('$dispatcher', new Reference(EventDispatcherInterface::class));
             $renderFormListenerDefinition->setArgument('$twig', new Reference('twig'));
             $renderFormListenerDefinition->setArgument('$flowName', $flowName);
-            $renderFormListenerDefinition->setArgument('$template', $flowConfig['template'] ?? $config['flow_defaults']['template'] ?? '@MashboWorkflowUpgrade/form.html.twig');
+            $renderFormListenerDefinition->setArgument('$template', $flowConfig['template'] ?? $config['flow_defaults']['template'] ?? '@MashboFormFlowExtension/form.html.twig');
             $renderFormListenerDefinition->addTag('kernel.event_subscriber');
 
-            $container->setDefinition("mashbo_workflow_upgrade.flows.$flowName.render_form_event_subscriber", $renderFormListenerDefinition);
+            $container->setDefinition("form_flow.flows.$flowName.render_form_event_subscriber", $renderFormListenerDefinition);
 
             if (!empty($flowConfig['append_data']) || !empty($flowConfig['prepend_data'])) {
                 $modifyDataListener = new Definition(ModifyDataEventSubscriber::class);
@@ -113,7 +112,7 @@ class MashboFormFlowExtension extends Extension
                 $modifyDataListener->setArgument('$flowName', $flowName);
                 $modifyDataListener->addTag('kernel.event_subscriber');
 
-                $container->setDefinition("mashbo_workflow_upgrade.flows.$flowName.modify_data_event_subscriber", $modifyDataListener);
+                $container->setDefinition("form_flow.flows.$flowName.modify_data_event_subscriber", $modifyDataListener);
             }
         }
 

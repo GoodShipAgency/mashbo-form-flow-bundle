@@ -3,9 +3,7 @@
 namespace Mashbo\FormFlowBundle;
 
 use Mashbo\FormFlowBundle\FlowHandlers\FlowHandler;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
 
 interface FlowInterface

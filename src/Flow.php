@@ -5,7 +5,6 @@ namespace Mashbo\FormFlowBundle;
 use Mashbo\FormFlowBundle\FlowHandlers\FlowHandler;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\Workflow;
 
@@ -54,7 +53,6 @@ class Flow implements FlowInterface
         }
 
         return $this->transition;
-
     }
 
     public function getWorkflow(): ?Workflow

@@ -4,8 +4,6 @@ namespace Mashbo\FormFlowBundle\EventSubscribers;
 
 use Mashbo\FormFlowBundle\Events\BeforeRenderFormTemplateEvent;
 use Mashbo\FormFlowBundle\Events\FindResponseEvent;
-use Mashbo\FormFlowBundle\Events\FlowFailed;
-use Mashbo\FormFlowBundle\Exceptions\FormFailedValidation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
