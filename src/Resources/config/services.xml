@@ -21,7 +21,7 @@
             <argument type="service" id="event_dispatcher" />
         </service>
 
-        <service id="Mashbo\FormFlowBundle\WorkflowUpgradeTwigExtension" class="Mashbo\FormFlowBundle\WorkflowUpgradeTwigExtension">
+        <service id="Mashbo\FormFlowBundle\FormFlowTwigExtension" class="Mashbo\FormFlowBundle\FormFlowTwigExtension">
             <tag name="twig.extension" />
             <argument type="service" id="Mashbo\FormFlowBundle\FlowRegistry" />
         </service>
