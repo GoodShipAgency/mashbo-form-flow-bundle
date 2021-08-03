@@ -40,7 +40,7 @@ class FlowContext
         return $this->request;
     }
 
-    public function setSubject($subject)
+    public function setSubject($subject): ?object
     {
         $this->subject = $subject;
     }

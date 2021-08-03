@@ -29,7 +29,7 @@ use Symfony\Component\Workflow\Registry;
 class MashboFormFlowExtension extends Extension
 {
 
-    public function load(array $configs, ContainerBuilder $container): void
+    public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));
         $loader->load('services.xml');
@@ -47,6 +47,18 @@ class MashboFormFlowExtension extends Extension
                 $config['flow_defaults']
             );
 
+            // Not set implies enabled: true, with no parameters, will redirect to same route
+            // Set enabled: false to fully disable
+            if (!isset($flowConfig['http_redirect'])) {
+                $flowConfig['http_redirect'] = ['enabled' => true];
+            }
+
+            // Not set implies enabled: false, with no parameters, will redirect to same route
+            // Set enabled: false to fully disable
+            if (!isset($flowConfig['ajax_redirect'])) {
+                $flowConfig['ajax_redirect'] = ['enabled' => false];
+            }
+
             $flowDefinition = new Definition(Flow::class);
             $flowDefinition->setArgument('$formFactory', new Reference('form.factory'));
             $flowDefinition->setArgument('$flowHandler', $handlerService);
@@ -57,6 +69,8 @@ class MashboFormFlowExtension extends Extension
             $flowDefinition->setArgument('$registry', new Reference(Registry::class));
             $flowDefinition->setArgument('$workflow', $flowConfig['workflow'] ?? null);
             $flowDefinition->setArgument('$transition', $flowConfig['transition'] ?? null);
+            $flowDefinition->setArgument('$httpRedirectConfig', $flowConfig['http_redirect']);
+            $flowDefinition->setArgument('$ajaxRedirectConfig', $flowConfig['ajax_redirect']);
             $registryDefinition->addMethodCall(
                 'registerFlow',
                 [
@@ -65,22 +79,16 @@ class MashboFormFlowExtension extends Extension
                 ]
             );
 
-            // Not set implies enabled: true, with no parameters, will redirect to same route
-            // Set enabled: false to fully disable
-            if (!isset($flowConfig['success_redirect'])) {
-                $flowConfig['success_redirect'] = ['enabled' => true];
-            }
-
-            if ($flowConfig['success_redirect']['enabled']) {
-
+            if ($flowConfig['http_redirect']['enabled']) {
                 $successRedirectSubscriberDefinition = new Definition(RedirectOnSuccessEventSubscriber::class);
                 $successRedirectSubscriberDefinition->setArgument('$flowName', $flowName);
                 $successRedirectSubscriberDefinition->setArgument('$urlGenerator', new Reference('router'));
-                $successRedirectSubscriberDefinition->setArgument('$routeName', $flowConfig['success_redirect']['route'] ?? null);
-                $successRedirectSubscriberDefinition->setArgument('$routeParams', $flowConfig['success_redirect']['parameters'] ?? []);
+                $successRedirectSubscriberDefinition->setArgument('$routeName', $flowConfig['http_redirect']['route'] ?? null);
+                $successRedirectSubscriberDefinition->setArgument('$routeParams', $flowConfig['http_redirect']['parameters'] ?? []);
+                $successRedirectSubscriberDefinition->setArgument('$session', new Reference('session'));
                 $successRedirectSubscriberDefinition->addTag('kernel.event_subscriber');
 
-                $container->setDefinition("form_flow.flows.$flowName.success_redirect_event_subscriber", $successRedirectSubscriberDefinition);
+                $container->setDefinition("form_flow.flows.$flowName.http_redirect_event_subscriber", $successRedirectSubscriberDefinition);
             }
 
             $useWorkflowListener = isset($flowConfig['workflow_transition']) && is_array($flowConfig['workflow_transition']) && count($flowConfig['workflow_transition']) == 2;
@@ -105,8 +113,9 @@ class MashboFormFlowExtension extends Extension
 
             $container->setDefinition("form_flow.flows.$flowName.render_form_event_subscriber", $renderFormListenerDefinition);
 
-            if (!empty($flowConfig['append_data']) || !empty($flowConfig['prepend_data'])) {
+            if (!empty($flowConfig['default_data']) || !empty($flowConfig['append_data']) || !empty($flowConfig['prepend_data'])) {
                 $modifyDataListener = new Definition(ModifyDataEventSubscriber::class);
+                $modifyDataListener->setArgument('$defaultData', $flowConfig['default_data'] ?? null);
                 $modifyDataListener->setArgument('$appendData', $flowConfig['append_data']);
                 $modifyDataListener->setArgument('$prependData', $flowConfig['prepend_data']);
                 $modifyDataListener->setArgument('$flowName', $flowName);
@@ -122,7 +131,7 @@ class MashboFormFlowExtension extends Extension
         $container->setDefinition(ValidationListener::class, $validationListener);
     }
 
-    private function resolveHandlerService(string $flowName, array $config, array $defaults): Definition
+    private function resolveHandlerService(string $flowName, array $config, array $defaults)
     {
         $key = $config['handler'] ?? $defaults['handler'] ?? null;
         if ($key === null) {

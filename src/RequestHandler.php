@@ -2,6 +2,7 @@
 
 namespace Mashbo\FormFlowBundle;
 
+use Mashbo\FormFlowBundle\Events\BeforeFormCreationEvent;
 use Mashbo\FormFlowBundle\Events\BeforeFormEvent;
 use Mashbo\FormFlowBundle\Events\BeforeHandlerEvent;
 use Mashbo\FormFlowBundle\Events\FindResponseEvent;
@@ -29,7 +30,10 @@ class RequestHandler
     {
         $flow = $this->registry->findFlow($name);
 
-        $form = $flow->getForm();
+        $beforeFormCreationEvent = new BeforeFormCreationEvent($flow, $subject);
+        $this->dispatcher->dispatch($beforeFormCreationEvent);
+
+        $form = $flow->getForm($beforeFormCreationEvent->getData());
         $context = new FlowContext($flow, $name, $request, $form);
 
         $this->dispatcher->dispatch(new FlowWasStarted($context));

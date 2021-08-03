@@ -21,7 +21,7 @@ class ValidateFormDataBeforeHandlerEventSubscriber implements EventSubscriberInt
         $context = $event->getContext();
         $formData = $context->form->getData();
 
-        $errors = $this->validator->validate($formData);
+        $errors = $this->validator->validate($formData, null, $context->form->getConfig()->getOption('validation_groups'));
         $context->valid = (count($errors) === 0);
 
         if ($context->valid) {
@@ -31,7 +31,7 @@ class ValidateFormDataBeforeHandlerEventSubscriber implements EventSubscriberInt
         throw new FormFailedValidation($context, $errors);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeHandlerEvent::class => 'onBeforeHandler'

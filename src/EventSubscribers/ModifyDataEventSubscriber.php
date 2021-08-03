@@ -2,6 +2,7 @@
 
 namespace Mashbo\FormFlowBundle\EventSubscribers;
 
+use Mashbo\FormFlowBundle\Events\BeforeFormCreationEvent;
 use Mashbo\FormFlowBundle\Events\BeforeFormEvent;
 use Mashbo\FormFlowBundle\Events\BeforeHandlerEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -10,15 +11,38 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ModifyDataEventSubscriber implements EventSubscriberInterface
 {
-    private array $appendData;
-    private array $prependData;
-    private string $flowName;
+    public function __construct(
+        private ?array $defaultData, private array $appendData, private array $prependData, private string $flowName
+    ) {}
 
-    public function __construct(array $appendData, array $prependData, string $flowName)
+    public function onBeforeFormCreationEvent(BeforeFormCreationEvent $event): void
     {
-        $this->appendData = $appendData;
-        $this->prependData = $prependData;
-        $this->flowName = $flowName;
+        if ($event->getFlow()->getName() !== $this->flowName) {
+            return;
+        }
+
+        if ($this->defaultData === null) {
+            return;
+        }
+
+        $data = new $this->defaultData['class']();
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $expression = new ExpressionLanguage();
+
+        foreach ($this->defaultData['arguments'] as $propertyPath => $expressionString) {
+            $accessor->setValue(
+                $data,
+                $propertyPath,
+                $expression->evaluate(
+                    $expressionString,
+                    [
+                        'subject' => $event->getSubject(),
+                    ]
+                )
+            );
+        }
+
+        $event->setData($data);
     }
 
     public function onBeforeHandler(BeforeHandlerEvent $event): void
@@ -73,11 +97,13 @@ class ModifyDataEventSubscriber implements EventSubscriberInterface
         }
     }
 
+
     public static function getSubscribedEvents()
     {
         return [
+            BeforeFormCreationEvent::class => 'onBeforeFormCreationEvent',
+            BeforeFormEvent::class => 'onBeforeFormEvent',
             BeforeHandlerEvent::class => 'onBeforeHandler',
-            BeforeFormEvent::class => 'onBeforeFormEvent'
         ];
     }
 }

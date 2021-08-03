@@ -1,25 +1,25 @@
 {
     "name": "mashbo/form-flow-bundle",
-    "description": "Mashbo FormFlowBundle abstracts away as much cSymfony controller and form code as possible, so you can focus more on business logic",
+    "description": "Mashbo FormFlowBundle abstracts away as much Symfony controller and form code as possible, so you can focus more on business logic",
     "type": "symfony-bundle",
     "require": {
         "php": "^8.0",
-        "symfony/config": "^5.2",
-        "symfony/dependency-injection": "^5.2",
+        "symfony/config": "^5.3",
+        "symfony/dependency-injection": "^5.3",
         "doctrine/orm": "^2.8",
-        "symfony/form": "^5.2",
-        "symfony/event-dispatcher": "^5.2",
+        "symfony/form": "^5.3",
+        "symfony/event-dispatcher": "^5.3",
         "twig/twig": "^3.3",
-        "symfony/workflow": "^5.2",
-        "symfony/messenger": "^5.2",
-        "symfony/http-foundation": "^5.2",
-        "symfony/validator": "^5.2",
-        "symfony/routing": "^5.2",
-        "symfony/expression-language": "^5.2",
-        "symfony/http-kernel": "^5.2"
+        "symfony/workflow": "^5.3",
+        "symfony/messenger": "^5.3",
+        "symfony/http-foundation": "^5.3",
+        "symfony/validator": "^5.3",
+        "symfony/routing": "^5.3",
+        "symfony/expression-language": "^5.3",
+        "symfony/http-kernel": "^5.3"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.2",
+        "symfony/phpunit-bridge": "^5.3",
         "vimeo/psalm": "^4.7"
     },
     "autoload": {
@@ -29,8 +29,8 @@
     },
     "authors": [
         {
-            "name": "Adam Quaile",
-            "email": "aquaile@mashbo.com"
+            "name": "Steve Todd",
+            "email": "stodd@mashbo.com"
         }
     ],
     "minimum-stability": "stable"
