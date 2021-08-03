@@ -6,18 +6,23 @@ use Mashbo\FormFlowBundle\Events\FindResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectOnSuccessEventSubscriber implements EventSubscriberInterface
 {
+    private Session $session;
+
     public function __construct(
         private string $flowName,
         private UrlGeneratorInterface $urlGenerator,
         private ?string $routeName,
         private ?array $routeParams,
-        private Session $session
-    ) {}
+        private RequestStack $requestStack
+    ) {
+        $this->session = $this->requestStack->getSession();
+    }
 
     public function onFindResponseEvent(FindResponseEvent $event): void
     {

@@ -85,7 +85,7 @@ class MashboFormFlowExtension extends Extension
                 $successRedirectSubscriberDefinition->setArgument('$urlGenerator', new Reference('router'));
                 $successRedirectSubscriberDefinition->setArgument('$routeName', $flowConfig['http_redirect']['route'] ?? null);
                 $successRedirectSubscriberDefinition->setArgument('$routeParams', $flowConfig['http_redirect']['parameters'] ?? []);
-                $successRedirectSubscriberDefinition->setArgument('$session', new Reference('session'));
+                $successRedirectSubscriberDefinition->setArgument('$requestStack', new Reference('request_stack'));
                 $successRedirectSubscriberDefinition->addTag('kernel.event_subscriber');
 
                 $container->setDefinition("form_flow.flows.$flowName.http_redirect_event_subscriber", $successRedirectSubscriberDefinition);
