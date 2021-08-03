@@ -39,7 +39,8 @@ class RenderFormResponseEventSubscriber implements EventSubscriberInterface
                 $this->template,
                 [
                     'form' => $context->form->createView(),
-                    'context' => $context
+                    'context' => $context,
+                    'flow' => $context->getFlow(),
                 ]
             );
             $this->dispatcher->dispatch($beforeRenderFormTemplateEvent);

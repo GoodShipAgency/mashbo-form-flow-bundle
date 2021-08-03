@@ -2,6 +2,7 @@
 
 namespace Mashbo\FormFlowBundle;
 
+use Mashbo\FormFlowBundle\Events\BeforeFormCreationEvent;
 use Mashbo\FormFlowBundle\Events\BeforeFormEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
@@ -20,7 +21,11 @@ class FormEmbedder
     public function embedForm(string $flowName, ?object $subject = null): FormInterface
     {
         $flow = $this->registry->findFlow($flowName);
-        $form = $flow->getForm();
+
+        $beforeFormCreationEvent = new BeforeFormCreationEvent($flow, $subject);
+        $this->dispatcher->dispatch($beforeFormCreationEvent);
+
+        $form = $flow->getForm($beforeFormCreationEvent->getData());
         $context = new FlowContext($flow, $flowName, null, $form);
         $context->subject = $subject;
 
