@@ -22,9 +22,22 @@ class Flow implements FlowInterface
     private array $metadata;
     private FormEmbedder $formEmbedder;
     private string $name;
+    private array $httpRedirectConfig;
+    private array $ajaxRedirectConfig;
 
-    public function __construct(FormFactoryInterface $formFactory, FormEmbedder $formEmbedder, FlowHandler $flowHandler, string $formType, Registry $registry, string $name, array $metadata, ?string $workflow, ?string $transition)
-    {
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        FormEmbedder $formEmbedder,
+        FlowHandler $flowHandler,
+        string $formType,
+        Registry $registry,
+        string $name,
+        array $metadata,
+        ?string $workflow,
+        ?string $transition,
+        array $httpRedirectConfig,
+        array $ajaxRedirectConfig,
+    ) {
         $this->formType = $formType;
         $this->registry = $registry;
         $this->workflow = $workflow;
@@ -34,6 +47,8 @@ class Flow implements FlowInterface
         $this->metadata = $metadata;
         $this->formEmbedder = $formEmbedder;
         $this->name = $name;
+        $this->httpRedirectConfig = $httpRedirectConfig;
+        $this->ajaxRedirectConfig = $ajaxRedirectConfig;
     }
 
     public function getMetadata(): array
@@ -41,9 +56,14 @@ class Flow implements FlowInterface
         return $this->metadata;
     }
 
-    public function getForm(): FormInterface
+    public function getForm(?object $data = null): FormInterface
     {
-        return $this->formFactory->create($this->formType, null, []);
+        return $this->formFactory->create($this->formType, $data, []);
+    }
+
+    public function getSubject(): ?object
+    {
+        return null;
     }
 
     public function getTransition(): ?string
@@ -61,7 +81,7 @@ class Flow implements FlowInterface
             return null;
         }
 
-        return $this->registry->get(null, $this->workflow);
+        return $this->registry->get($this->getSubject(), $this->workflow);
     }
 
     public function getHandler(): FlowHandler
@@ -77,5 +97,15 @@ class Flow implements FlowInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getHttpRedirectConfig(): array
+    {
+        return $this->httpRedirectConfig;
+    }
+
+    public function getAjaxRedirectConfig(): array
+    {
+        return $this->ajaxRedirectConfig;
     }
 }

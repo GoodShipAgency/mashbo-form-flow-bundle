@@ -6,21 +6,22 @@ use Mashbo\FormFlowBundle\Events\FindResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectOnSuccessEventSubscriber implements EventSubscriberInterface
 {
-    private UrlGeneratorInterface $urlGenerator;
-    private ?string $routeName;
-    private array $routeParams;
-    private string $flowName;
+    private Session $session;
 
-    public function __construct(string $flowName, UrlGeneratorInterface $urlGenerator, ?string $routeName, array $routeParams)
-    {
-        $this->urlGenerator = $urlGenerator;
-        $this->routeName = $routeName;
-        $this->routeParams = $routeParams;
-        $this->flowName = $flowName;
+    public function __construct(
+        private string $flowName,
+        private UrlGeneratorInterface $urlGenerator,
+        private ?string $routeName,
+        private ?array $routeParams,
+        private RequestStack $requestStack
+    ) {
+        $this->session = $this->requestStack->getSession();
     }
 
     public function onFindResponseEvent(FindResponseEvent $event): void
@@ -39,7 +40,6 @@ class RedirectOnSuccessEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-
         if ($this->routeName !== null) {
             $expr = new ExpressionLanguage();
             $params = [];
@@ -54,6 +54,8 @@ class RedirectOnSuccessEventSubscriber implements EventSubscriberInterface
             );
             return;
         }
+
+        $this->session->getFlashBag()->add('success', 'Submission successful');
 
         $event->setResponse(
             new RedirectResponse($event->getRequest()->getRequestUri())
