@@ -7,7 +7,7 @@ cache:
 
 composer:
     script:
-        -composer install
+        - composer install
 
 psalm:
     script:
