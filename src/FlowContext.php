@@ -44,7 +44,7 @@ class FlowContext
         return $this->request;
     }
 
-    public function setSubject($subject): void
+    public function setSubject(object $subject): void
     {
         $this->subject = $subject;
     }
