@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 class FlowContextTest extends TestCase
 {
     protected FlowContext $sut;
-    private MockObject $flow;
-    private MockObject $form;
+    private FlowInterface $flow;
+    private FormInterface $form;
 
     public function setUp(): void
     {
