@@ -29,6 +29,9 @@ use Symfony\Component\Workflow\Registry;
 class MashboFormFlowExtension extends Extension
 {
 
+    /**
+     * @return void
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));
@@ -131,7 +134,7 @@ class MashboFormFlowExtension extends Extension
         $container->setDefinition(ValidationListener::class, $validationListener);
     }
 
-    private function resolveHandlerService(string $flowName, array $config, array $defaults)
+    private function resolveHandlerService(string $flowName, array $config, array $defaults): Definition
     {
         $key = $config['handler'] ?? $defaults['handler'] ?? null;
         if ($key === null) {

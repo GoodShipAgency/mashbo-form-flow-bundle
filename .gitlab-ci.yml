@@ -1,0 +1,22 @@
+image: registry.gitlab.com/mashbo/docker-php:pipeline-base-f28ac6f7a7567350ccf6e188cc7623f620392221
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - vendor/
+
+composer:
+    script:
+        - composer install
+
+psalm:
+    script:
+        - vendor/bin/psalm
+    needs:
+        - composer
+
+test:
+    script:
+        - vendor/bin/phpunit tests
+    needs:
+        - composer
