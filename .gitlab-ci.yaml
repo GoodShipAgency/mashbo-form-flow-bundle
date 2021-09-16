@@ -1,0 +1,8 @@
+image: registry.gitlab.com/mashbo/docker-php:pipeline-base-f28ac6f7a7567350ccf6e188cc7623f620392221
+
+before_script:
+    - composer install
+
+test:
+    script:
+        - vendor/bin/phpunit tests

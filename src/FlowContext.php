@@ -37,10 +37,14 @@ class FlowContext
 
     public function getRequest(): Request
     {
+        if ($this->request === null) {
+            throw new \LogicException('FlowContext has no Request');
+        }
+
         return $this->request;
     }
 
-    public function setSubject($subject): ?object
+    public function setSubject($subject): void
     {
         $this->subject = $subject;
     }
