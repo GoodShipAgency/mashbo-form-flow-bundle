@@ -12,11 +12,11 @@ composer:
 psalm:
     script:
         - vendor/bin/psalm
-    dependencies:
+    needs:
         - composer
 
 test:
     script:
         - vendor/bin/phpunit tests
-    dependencies:
+    needs:
         - composer
