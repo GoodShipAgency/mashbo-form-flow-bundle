@@ -3,6 +3,7 @@
 namespace Mashbo\FormFlowBundle\DependencyInjection;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Mashbo\FormFlowBundle\EventSubscribers\HtmxEventSubscriber;
 use Mashbo\FormFlowBundle\EventSubscribers\ModifyDataEventSubscriber;
 use Mashbo\FormFlowBundle\EventSubscribers\RedirectOnSuccessEventSubscriber;
 use Mashbo\FormFlowBundle\EventSubscribers\RenderFormResponseEventSubscriber;
@@ -34,13 +35,21 @@ class MashboFormFlowExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new XmlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $loader->load('services.xml');
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $registryDefinition = $container->getDefinition(FlowRegistry::class);
+
+        $htmxEventSubscriber = new Definition(HtmxEventSubscriber::class);
+        $htmxEventSubscriber->setArgument('$twig', new Reference('twig'));
+        $htmxEventSubscriber->setArgument('$formEmbedder', new Reference(FormEmbedder::class));
+        $htmxEventSubscriber->setArgument('$urlGenerator', new Reference('router'));
+
+        $htmxEventSubscriber->addTag('kernel.event_subscriber');
+        $container->setDefinition("form_flow.htmx_event_subscriber", $htmxEventSubscriber);
 
         foreach ($config['flows'] as $flowName => $flowConfig) {
 
