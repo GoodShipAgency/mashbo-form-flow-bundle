@@ -11,6 +11,7 @@ use Mashbo\FormFlowBundle\Events\FlowSucceeded;
 use Mashbo\FormFlowBundle\Events\FlowWasStarted;
 use Mashbo\FormFlowBundle\Events\SubjectWasDetermined;
 use Mashbo\FormFlowBundle\Exceptions\FormFailedValidation;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -60,6 +61,8 @@ class RequestHandler
                 $this->dispatcher->dispatch(new FlowFailed($context, $exception));
                 $context->successful = false;
                 $context->exception = $exception;
+            } catch (\DomainException $domainException) {
+                $form->addError(new FormError($domainException->getMessage()));
             }
 
         }
