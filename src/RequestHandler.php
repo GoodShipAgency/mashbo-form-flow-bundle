@@ -63,6 +63,9 @@ class RequestHandler
                 $context->exception = $exception;
             } catch (\DomainException $domainException) {
                 $form->addError(new FormError($domainException->getMessage()));
+            } catch (\Exception $e) {
+                dump($e);
+                $form->addError(new FormError('There was an error processing this request'));
             }
 
         }
