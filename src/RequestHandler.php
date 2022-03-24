@@ -69,6 +69,8 @@ class RequestHandler
                     $form->addError(new FormError($previous->getMessage()));
                 } else {
                     $form->addError(new FormError('There was an error processing this request'));
+
+                    throw $handlerFailedException;
                 }
             }
         }
