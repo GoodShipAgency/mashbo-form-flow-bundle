@@ -14,6 +14,7 @@ use Mashbo\FormFlowBundle\Exceptions\FormFailedValidation;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class RequestHandler
@@ -61,13 +62,15 @@ class RequestHandler
                 $this->dispatcher->dispatch(new FlowFailed($context, $exception));
                 $context->successful = false;
                 $context->exception = $exception;
-            } catch (\DomainException $domainException) {
-                $form->addError(new FormError($domainException->getMessage()));
-            } catch (\Exception $e) {
-                dump($e);
-                $form->addError(new FormError('There was an error processing this request'));
-            }
+            } catch (HandlerFailedException $handlerFailedException) {
+                $previous = $handlerFailedException->getPrevious();
 
+                if ($previous instanceof \DomainException) {
+                    $form->addError(new FormError($previous->getMessage()));
+                } else {
+                    $form->addError(new FormError('There was an error processing this request'));
+                }
+            }
         }
 
         $event = new FindResponseEvent($flow, $context);
