@@ -15,6 +15,9 @@
             <argument type="service" id="twig" />
             <tag name="kernel.event_subscriber" />
         </service>
+        <service id="Mashbo\FormFlowBundle\EventSubscribers\FlowFailedEventSubscriber" class="Mashbo\FormFlowBundle\EventSubscribers\FlowFailedEventSubscriber">
+            <tag name="kernel.event_subscriber" />
+        </service>
 
         <service id="Mashbo\FormFlowBundle\FormEmbedder" class="Mashbo\FormFlowBundle\FormEmbedder">
             <argument type="service" id="Mashbo\FormFlowBundle\FlowRegistry" />
