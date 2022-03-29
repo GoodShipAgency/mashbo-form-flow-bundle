@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('handler')->end()
                         ->booleanNode('flush_entity_manager')->defaultFalse()->end()
                         ->scalarNode('template')->defaultNull()->end()
+                        ->scalarNode('failure_response_code')->defaultValue(200)->end()
                     ->end()
                 ->end()
                 ->arrayNode('flows')
