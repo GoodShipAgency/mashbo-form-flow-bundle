@@ -37,6 +37,7 @@ class Configuration implements ConfigurationInterface
                             ->variableNode('prepend_data')->defaultValue([])->end()
                             ->variableNode('metadata')->defaultValue([])->end()
                             ->scalarNode('template')->defaultNull()->end()
+                            ->scalarNode('failure_response_code')->defaultNull()->end()
                             ->arrayNode('http_redirect')
                                 ->beforeNormalization()
                                     ->ifTrue(function($v) { return $v === false; })
