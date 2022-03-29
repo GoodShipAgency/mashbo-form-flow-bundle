@@ -15,13 +15,15 @@ class RenderFormResponseEventSubscriber implements EventSubscriberInterface
     private string $template;
     private string $flowName;
     private EventDispatcherInterface $dispatcher;
+    private int $failureResponseCode;
 
-    public function __construct(EventDispatcherInterface $dispatcher, Environment $twig, string $flowName, string $template)
+    public function __construct(EventDispatcherInterface $dispatcher, Environment $twig, string $flowName, string $template, int $failureResponseCode)
     {
         $this->twig = $twig;
         $this->template = $template;
         $this->flowName = $flowName;
         $this->dispatcher = $dispatcher;
+        $this->failureResponseCode = $failureResponseCode;
     }
 
     public function onFindResponseEvent(FindResponseEvent $event): void
@@ -45,12 +47,19 @@ class RenderFormResponseEventSubscriber implements EventSubscriberInterface
             );
             $this->dispatcher->dispatch($beforeRenderFormTemplateEvent);
 
+            $responseCode = Response::HTTP_OK;
+
+            if ($context->successful === false && $context->submitted) {
+                $responseCode = $this->failureResponseCode;
+            }
+
             $event->setResponse(
                 new Response(
                     $this->twig->render(
                         $beforeRenderFormTemplateEvent->getTemplate(),
                         $beforeRenderFormTemplateEvent->getParameters(),
-                    )
+                    ),
+                    status: $responseCode
                 )
             );
         }

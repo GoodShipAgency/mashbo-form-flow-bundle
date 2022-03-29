@@ -121,6 +121,7 @@ class MashboFormFlowExtension extends Extension
             $renderFormListenerDefinition->setArgument('$twig', new Reference('twig'));
             $renderFormListenerDefinition->setArgument('$flowName', $flowName);
             $renderFormListenerDefinition->setArgument('$template', $flowConfig['template'] ?? $config['flow_defaults']['template'] ?? '@MashboFormFlowExtension/form.html.twig');
+            $renderFormListenerDefinition->setArgument('$failureResponseCode', $flowConfig['failure_response_code'] ?? $config['flow_defaults']['failure_response_code'] ?? 200);
             $renderFormListenerDefinition->addTag('kernel.event_subscriber');
 
             $container->setDefinition("form_flow.flows.$flowName.render_form_event_subscriber", $renderFormListenerDefinition);
