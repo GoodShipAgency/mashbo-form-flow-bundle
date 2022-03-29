@@ -65,13 +65,10 @@ class RequestHandler
             } catch (HandlerFailedException $handlerFailedException) {
                 $previous = $handlerFailedException->getPrevious();
 
-                if ($previous instanceof \DomainException) {
-                    $form->addError(new FormError($previous->getMessage()));
-                } else {
-                    $form->addError(new FormError('There was an error processing this request'));
+                $context->successful = false;
+                $context->exception = $previous;
 
-                    throw $handlerFailedException;
-                }
+                $this->dispatcher->dispatch(new FlowFailed($context, $previous));
             }
         }
 
